@@ -20,6 +20,7 @@ const client = new MongoClient(uri, {
 const dbHandler = async () => {
   try {
     const foodCollection = client.db("tastyBite").collection("Food");
+    const reviewCollection = client.db("tastyBite").collection("Review");
     app.get("/homefood", async (req, res) => {
       const query = {};
       const results = await foodCollection.find(query).limit(3).toArray();
@@ -35,6 +36,12 @@ const dbHandler = async () => {
       const query = { _id: ObjectId(id) };
       const data = foodCollection.findOne(query);
       res.send(await data);
+    });
+    app.post("/review", async (req, res) => {
+      const review = req.body;
+      const results = reviewCollection.insertOne(review);
+      const data = await results;
+      res.send(data);
     });
   } catch (error) {
     console.log(error);
