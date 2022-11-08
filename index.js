@@ -45,10 +45,19 @@ const dbHandler = async () => {
     });
 
     app.get("/review", async (req, res) => {
-      const query = {};
+      const postId = req.query.postId;
+      const email = req.query.email;
+      const query = { postId: postId, email: email };
       const review = reviewCollection.find(query);
       const results = await review.toArray();
       res.send(results);
+    });
+    app.get("/myreviews", async (req, res) => {
+      const email = req.query.email;
+      console.log(email);
+      const filter = { email: email };
+      const reviews = await reviewCollection.find(filter).toArray();
+      res.send(reviews);
     });
     app.patch("/review/:id", async (req, res) => {
       const id = req.params.id;
@@ -64,15 +73,13 @@ const dbHandler = async () => {
     });
     app.delete("/review/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
       const query = { _id: ObjectId(id) };
       const results = await reviewCollection.deleteOne(query);
       if (results.deletedCount) {
-        console.log("Deleted");
+        res.send(results);
       } else {
-        console.log("not deleted");
+        res.status(404).send("Please Try Again");
       }
-      res.send(results);
     });
   } catch (error) {
     console.log(error);
@@ -85,5 +92,4 @@ app.get("/", (req, res) => {
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
-  console.log(uri);
 });
