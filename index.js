@@ -43,6 +43,13 @@ const dbHandler = async () => {
       const data = await results;
       res.send(data);
     });
+
+    app.get("/review", async (req, res) => {
+      const query = {};
+      const review = reviewCollection.find(query);
+      const results = await review.toArray();
+      res.send(results);
+    });
   } catch (error) {
     console.log(error);
   }
