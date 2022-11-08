@@ -50,13 +50,6 @@ const dbHandler = async () => {
       const results = await review.toArray();
       res.send(results);
     });
-    app.delete("/review/:id", async (req, res) => {
-      const id = req.params.id;
-      const filter = { _id: ObjectId(id) };
-      const data = reviewCollection.deleteOne(filter);
-      const results = await data;
-      res.send(results);
-    });
     app.patch("/review/:id", async (req, res) => {
       const id = req.params.id;
       const updatedReview = req.body;
@@ -66,6 +59,19 @@ const dbHandler = async () => {
       };
       const data = reviewCollection.updateOne(filter, updatedDoc);
       const results = await data;
+      res.send(results);
+      console.log(updatedDoc);
+    });
+    app.delete("/review/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: ObjectId(id) };
+      const results = await reviewCollection.deleteOne(query);
+      if (results.deletedCount) {
+        console.log("Deleted");
+      } else {
+        console.log("not deleted");
+      }
       res.send(results);
     });
   } catch (error) {
