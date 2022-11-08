@@ -9,7 +9,7 @@ app.use(express.json());
 
 const port = process.env.PORT || 8000;
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_pASSWORD}@cluster0.pwgovse.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -29,6 +29,12 @@ const dbHandler = async () => {
       const query = {};
       const results = await foodCollection.find(query).toArray();
       res.send(results);
+    });
+    app.get("/allfood/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const data = foodCollection.findOne(query);
+      res.send(await data);
     });
   } catch (error) {
     console.log(error);
