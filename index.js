@@ -46,8 +46,8 @@ const dbHandler = async () => {
 
     app.get("/review", async (req, res) => {
       const postId = req.query.postId;
-      const email = req.query.email;
-      const query = { postId: postId, email: email };
+      // const email = req.query.email;
+      const query = { postId: postId };
       const review = reviewCollection.find(query);
       const results = await review.toArray();
       res.send(results);
@@ -58,6 +58,13 @@ const dbHandler = async () => {
       const filter = { email: email };
       const reviews = await reviewCollection.find(filter).toArray();
       res.send(reviews);
+    });
+    app.get("/myreviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const reviews = reviewCollection.findOne(filter);
+      const results = await reviews;
+      res.send(results);
     });
     app.patch("/review/:id", async (req, res) => {
       const id = req.params.id;
