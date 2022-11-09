@@ -113,7 +113,7 @@ const dbHandler = async () => {
       const results = await reviews;
       res.send(results);
     });
-    app.patch("/review/:id", verifyJWT, async (req, res) => {
+    app.patch("/review/:id", async (req, res) => {
       const id = req.params.id;
       const updatedReview = req.body;
       const filter = { _id: ObjectId(id) };
