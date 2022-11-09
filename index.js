@@ -23,13 +23,26 @@ const dbHandler = async () => {
     const reviewCollection = client.db("tastyBite").collection("Review");
     app.get("/homefood", async (req, res) => {
       const query = {};
-      const results = await foodCollection.find(query).limit(3).toArray();
+      const results = await foodCollection
+        .find(query)
+        .limit(3)
+        .sort({ date: -1 })
+        .toArray();
       res.send(results);
     });
     app.get("/allfood", async (req, res) => {
       const query = {};
-      const results = await foodCollection.find(query).toArray();
+      const results = await foodCollection
+        .find(query)
+        .sort({ date: -1 })
+        .toArray();
       res.send(results);
+    });
+    app.post("/allfood", async (req, res) => {
+      const postInfo = req.body;
+      console.log(postInfo);
+      const results = await foodCollection.insertOne(postInfo);
+      res.status(200).send(results);
     });
     app.get("/allfood/:id", async (req, res) => {
       const id = req.params.id;
