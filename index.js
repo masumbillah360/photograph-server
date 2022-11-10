@@ -113,7 +113,7 @@ const dbHandler = async () => {
       const results = await reviews;
       res.send(results);
     });
-    app.patch("/review/:id", async (req, res) => {
+    app.patch("/review/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const updatedReview = req.body;
       const filter = { _id: ObjectId(id) };
@@ -133,6 +133,16 @@ const dbHandler = async () => {
       } else {
         res.status(404).send("Please Try Again");
       }
+    });
+    app.get("/myservices/", verifyJWT, async (req, res) => {
+      const email = req.decoded.email;
+      console.log(email);
+      const query = { email: email };
+      const results = await foodCollection
+        .find(query)
+        .sort({ time: -1 })
+        .toArray();
+      res.send(results);
     });
   } catch (error) {
     console.log(error);
