@@ -50,6 +50,7 @@ const dbHandler = async () => {
       const token = jwt.sign(email, process.env.JWT_TOKEN);
       res.send({ token });
     });
+    // route for homepage only
     app.get("/homeservices", async (req, res) => {
       const query = {};
       const results = await foodCollection
@@ -59,6 +60,7 @@ const dbHandler = async () => {
         .toArray();
       res.send(results);
     });
+    // all services route
     app.get("/allservices", async (req, res) => {
       const query = {};
       const results = await foodCollection
@@ -67,24 +69,27 @@ const dbHandler = async () => {
         .toArray();
       res.send(results);
     });
+    // service post route
     app.post("/allservices", verifyJWT, async (req, res) => {
       const postInfo = req.body;
       const results = await foodCollection.insertOne(postInfo);
       res.status(200).send(results);
     });
+    // to get specified service route
     app.get("/allservices/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const data = foodCollection.findOne(query);
       res.send(await data);
     });
+    // review post method
     app.post("/review", verifyJWT, async (req, res) => {
       const review = req.body;
       const results = reviewCollection.insertOne(review);
       const data = await results;
       res.send(data);
     });
-
+    // get reviewcollenction for specified post
     app.get("/review", async (req, res) => {
       const postId = req.query.postId;
       const query = { postId: postId };
@@ -95,6 +100,7 @@ const dbHandler = async () => {
         .toArray();
       res.send(review);
     });
+    // users review
     app.get("/myreviews", verifyJWT, async (req, res) => {
       const user = req.decoded;
       const email = user.email;
@@ -106,6 +112,7 @@ const dbHandler = async () => {
       const results = await reviews;
       res.send(results);
     });
+    // to get users specified review
     app.get("/myreviews/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
@@ -113,7 +120,7 @@ const dbHandler = async () => {
       const results = await reviews;
       res.send(results);
     });
-
+    // users review update
     app.patch("/review/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const updatedReview = req.body;
@@ -125,6 +132,7 @@ const dbHandler = async () => {
       const results = await data;
       res.send(results);
     });
+    // delete users review
     app.delete("/review/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -135,6 +143,7 @@ const dbHandler = async () => {
         res.status(404).send("Please Try Again");
       }
     });
+    // get users services that user created
     app.get("/myservices/", verifyJWT, async (req, res) => {
       const email = req.decoded.email;
       console.log(email);
@@ -145,6 +154,7 @@ const dbHandler = async () => {
         .toArray();
       res.send(results);
     });
+    // get users services by specified id
     app.get("/myservices/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -152,6 +162,7 @@ const dbHandler = async () => {
       const data = await results;
       res.send(data);
     });
+    // update users services that user created
     app.patch("/myservices/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const updatedPost = req.body;
@@ -163,6 +174,7 @@ const dbHandler = async () => {
       const results = await data;
       res.send(results);
     });
+    // delete users services that user created only
     app.delete("/myservices/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
