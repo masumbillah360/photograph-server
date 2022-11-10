@@ -113,6 +113,7 @@ const dbHandler = async () => {
       const results = await reviews;
       res.send(results);
     });
+
     app.patch("/review/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const updatedReview = req.body;
@@ -143,6 +144,15 @@ const dbHandler = async () => {
         .sort({ time: -1 })
         .toArray();
       res.send(results);
+    });
+    app.delete("/myservices/:id", verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const filter = { _id: ObjectId(id) };
+      const reviews = foodCollection.deleteOne(filter);
+      const results = await reviews;
+      res.send(results);
+      console.log("deleteOne");
     });
   } catch (error) {
     console.log(error);
