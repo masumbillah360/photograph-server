@@ -50,7 +50,7 @@ const dbHandler = async () => {
       const token = jwt.sign(email, process.env.JWT_TOKEN);
       res.send({ token });
     });
-    // route for homepage only
+    // route for homepage only with limitation
     app.get("/homeservices", async (req, res) => {
       const query = {};
       const results = await foodCollection
@@ -75,7 +75,7 @@ const dbHandler = async () => {
       const results = await foodCollection.insertOne(postInfo);
       res.status(200).send(results);
     });
-    // to get specified service route
+    // to get specified service
     app.get("/allservices/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
