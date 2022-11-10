@@ -145,6 +145,26 @@ const dbHandler = async () => {
         .toArray();
       res.send(results);
     });
+    app.get("/myservices/:id", verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const results = foodCollection.findOne(query);
+      const data = await results;
+      res.send(data);
+    });
+    app.patch("/myservices/:id", verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const updatedPost = req.body;
+      console.log(id);
+      console.log(updatedPost);
+      const filter = { _id: ObjectId(id) };
+      const updatedDoc = {
+        $set: updatedPost,
+      };
+      const data = foodCollection.updateOne(filter, updatedDoc);
+      const results = await data;
+      res.send(results);
+    });
     app.delete("/myservices/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       console.log(id);
