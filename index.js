@@ -87,8 +87,7 @@ const dbHandler = async () => {
 
     app.get("/review", async (req, res) => {
       const postId = req.query.postId;
-      // const query = { postId: postId };
-      const query = {};
+      const query = { postId: postId };
       const user = req.decoded;
       const review = await reviewCollection
         .find(query)
