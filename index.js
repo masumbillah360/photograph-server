@@ -50,7 +50,7 @@ const dbHandler = async () => {
       const token = jwt.sign(email, process.env.JWT_TOKEN);
       res.send({ token });
     });
-    app.get("/homefood", async (req, res) => {
+    app.get("/homeservices", async (req, res) => {
       const query = {};
       const results = await foodCollection
         .find(query)
@@ -59,7 +59,7 @@ const dbHandler = async () => {
         .toArray();
       res.send(results);
     });
-    app.get("/allfood", async (req, res) => {
+    app.get("/allservices", async (req, res) => {
       const query = {};
       const results = await foodCollection
         .find(query)
@@ -67,13 +67,13 @@ const dbHandler = async () => {
         .toArray();
       res.send(results);
     });
-    app.post("/allfood", verifyJWT, async (req, res) => {
+    app.post("/allservices", verifyJWT, async (req, res) => {
       const postInfo = req.body;
       console.log(postInfo);
       const results = await foodCollection.insertOne(postInfo);
       res.status(200).send(results);
     });
-    app.get("/allfood/:id", async (req, res) => {
+    app.get("/allservices/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const data = foodCollection.findOne(query);
