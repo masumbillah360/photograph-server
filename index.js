@@ -69,7 +69,6 @@ const dbHandler = async () => {
     });
     app.post("/allservices", verifyJWT, async (req, res) => {
       const postInfo = req.body;
-      console.log(postInfo);
       const results = await foodCollection.insertOne(postInfo);
       res.status(200).send(results);
     });
@@ -86,9 +85,10 @@ const dbHandler = async () => {
       res.send(data);
     });
 
-    app.get("/review", verifyJWT, async (req, res) => {
+    app.get("/review", async (req, res) => {
       const postId = req.query.postId;
-      const query = { postId: postId };
+      // const query = { postId: postId };
+      const query = {};
       const user = req.decoded;
       const review = await reviewCollection
         .find(query)
@@ -100,11 +100,12 @@ const dbHandler = async () => {
       const user = req.decoded;
       const email = user.email;
       const filter = { email: email };
-      const reviews = await reviewCollection
+      const reviews = reviewCollection
         .find(filter)
         .sort({ time: -1 })
         .toArray();
-      res.send(reviews);
+      const results = await reviews;
+      res.send(results);
     });
     app.get("/myreviews/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
@@ -155,8 +156,6 @@ const dbHandler = async () => {
     app.patch("/myservices/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const updatedPost = req.body;
-      console.log(id);
-      console.log(updatedPost);
       const filter = { _id: ObjectId(id) };
       const updatedDoc = {
         $set: updatedPost,
@@ -167,7 +166,6 @@ const dbHandler = async () => {
     });
     app.delete("/myservices/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
-      console.log(id);
       const filter = { _id: ObjectId(id) };
       const reviews = foodCollection.deleteOne(filter);
       const results = await reviews;
@@ -175,7 +173,8 @@ const dbHandler = async () => {
       console.log("deleteOne");
     });
   } catch (error) {
-    console.log(error);
+    res.status(404).send(error.message);
+    console.log(error.message);
   }
 };
 dbHandler().catch((err) => console.log(err));
